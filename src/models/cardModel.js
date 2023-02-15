@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const { isURL } = require("validator");
 
 const { Schema, model } = mongoose;
-// const { ObjectId } = Schema.Types;
 
 const cardSchema = new Schema({
   title: {

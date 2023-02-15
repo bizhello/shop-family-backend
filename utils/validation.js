@@ -32,25 +32,26 @@ const idCardValidation = celebrate({
   }),
 });
 
-// const createUserValidation = celebrate({
-//   body: Joi.object().keys({
-//     email: Joi.string().required().email(),
-//     password: Joi.string().required(),
-//     name: Joi.string().min(2).max(30),
-//   }),
-// });
+const createUserValidation = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+    firstName: Joi.string().min(2).max(30).required(),
+    lastName: Joi.string().min(2).max(30).required(),
+  }),
+});
 
-// const loginValidation = celebrate({
-//   body: Joi.object().keys({
-//     email: Joi.string().required().email(),
-//     password: Joi.string().required(),
-//   }),
-// });
+const loginValidation = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+});
 
 module.exports = {
 //   updateUserValidation,
   createCardValidation,
   idCardValidation,
-//   createUserValidation,
-//   loginValidation,
+  createUserValidation,
+  loginValidation,
 };

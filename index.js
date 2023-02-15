@@ -27,7 +27,7 @@ app.use(express.json());
 // app.use(requestLogger);
 // app.use(limiter);
 // app.use(helmet());
-// app.use(cookieParser());
+app.use(cookieParser());
 app.use(routes);
 // app.use(errorLogger);
 app.use(errors());
