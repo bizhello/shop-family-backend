@@ -1,5 +1,3 @@
-const bcrypt = require("bcrypt");
-
 const authService = require("../services/authService");
 
 async function login(req, res, next) {
@@ -8,11 +6,11 @@ async function login(req, res, next) {
     const userData = await authService.login(email, password);
 
     res
-      .cookie("jwtRefreshToken", userData.jwtRefreshToken, {
+      .cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 1000,
         httpOnly: true,
       })
-      .send({ jwtAccessToken: userData.jwtAccessToken });
+      .send({ refreshToken: userData.refreshToken });
   } catch (error) {
     next(error);
   }
@@ -28,26 +26,29 @@ async function createUser(req, res, next) {
       lastName
     );
     res
-      .cookie("jwtRefreshToken", userData.jwtRefreshToken, {
+      .cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 1000,
         httpOnly: true,
       })
-      .send({ jwtAccessToken: userData.jwtAccessToken });
+      .send({ accessToken: userData.accessToken });
   } catch (error) {
     next(error);
   }
 }
 
-// async function signout(req, res, next) {
-//   try {
-//     res.clearCookie('jwt').send({ message: 'Выход' });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+async function logout(req, res, next) {
+  try {
+    const { refreshToken } = req.cookies;
+    await authService.logout(refreshToken);
+
+    res.clearCookie("refreshToken").send({ message: "Выход" });
+  } catch (error) {
+    next(error);
+  }
+}
 
 module.exports = {
   login,
   createUser,
-  //   signout,
+  logout,
 };

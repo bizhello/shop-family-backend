@@ -24,7 +24,7 @@ class AuthService {
     const dataUser = await newUser.save();
     const tokens = tokenService.generateTokens(dataUser._id);
 
-    await tokenService.saveToken(dataUser._id, tokens.jwtRefreshToken);
+    await tokenService.saveToken(dataUser._id, tokens.refreshToken);
 
     return {
       id: newUser._id,
@@ -47,11 +47,17 @@ class AuthService {
 
     const tokens = tokenService.generateTokens(user._id);
 
-    await tokenService.saveToken(user._id, tokens.jwtRefreshToken);
+    await tokenService.saveToken(user._id, tokens.refreshToken);
 
     return {
       ...tokens,
     };
+  }
+
+  async logout(refreshToken) {
+    await tokenService.removeToken(refreshToken);
+
+    return;
   }
 }
 

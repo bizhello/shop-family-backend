@@ -1,5 +1,5 @@
 const express = require('express');
-// const { userRoutes } = require('./userRoutes');
+const { userRoutes } = require('./userRoutes');
 const { cardRoutes } = require('./cardRoutes');
 const { authRoutes } = require('./authRoutes');
 // const { routeSecurity } = require('./routeSecurity');
@@ -9,7 +9,7 @@ const routes = express.Router();
 
 routes.use('/', authRoutes);
 // routes.use(auth);
-// routes.use('/users', userRoutes);
+routes.use('/users', userRoutes);
 routes.use('/cards', cardRoutes);
 // routes.use('*', routeSecurity);
 

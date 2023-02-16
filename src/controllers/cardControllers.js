@@ -1,11 +1,10 @@
-const { Card } = require('../models/cardModel');
-const { NotFoundError } = require('../../utils/errors/NotFoundError');
-const { BadRequestError } = require('../../utils/errors/BadRequestError');
+const cardService = require("../services/cardService");
+const { BadRequestError } = require("../../utils/errors/BadRequestError");
 
-async function getCards(req, res, next) {
+async function getCards(_, res, next) {
   try {
-    const movies = await Card.find({});
-    res.send(movies);
+    const cards = await cardService.getCards();
+    res.send(cards);
   } catch (error) {
     next(error);
   }
@@ -13,18 +12,11 @@ async function getCards(req, res, next) {
 
 async function postCard(req, res, next) {
   try {
-    const card = new Card({
-        title: req.body.title,
-        dateFrom: req.body.dateFrom,
-        dateTo: req.body.dateTo,
-        count: req.body.count,
-        url: req.body.url,
-    });
-    await card.save();
-    res.send({ message: 'Карточка создана' });
+    const card = await cardService.createCard(req.body);
+    res.send(card);
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      next(new BadRequestError('Некорректные данные при создании карточки'));
+    if (error.name === "ValidationError") {
+      next(new BadRequestError("Некорректные данные при создании карточки"));
     } else {
       next(error);
     }
@@ -33,12 +25,8 @@ async function postCard(req, res, next) {
 
 async function deleteCard(req, res, next) {
   try {
-    const card = await Card.findById(req.params.cardId);
-    if (card === null) {
-      throw new NotFoundError('Карточка была уже удалена');
-    }
-      await Card.deleteOne({ id: req.params.cardId });
-      res.send({ message: 'Карточка удалена' });
+    await cardService.removeCard(req.params.cardId);
+    res.send({ message: "Карточка удалена" });
   } catch (error) {
     next(error);
   }
@@ -46,16 +34,12 @@ async function deleteCard(req, res, next) {
 
 async function getCardById(req, res, next) {
   try {
-    const card = await Card.findById(req.params.cardId);
-    if (card === null) {
-      throw new NotFoundError('Карточки не существует');
-    }
-      res.send(card);
+    const card = await cardService.findCardById(req.params.cardId);
+    res.send(card);
   } catch (error) {
     next(error);
   }
 }
-
 
 module.exports = {
   getCards,
