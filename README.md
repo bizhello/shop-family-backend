@@ -35,7 +35,6 @@
 ###### users
 * GET       `http://localhost:${PORT}/users/` - получить всех пользователей
 
-* GET       `http://localhost:${PORT}/users/:cardId` - получить пользователя по ID
-* 
-* DELETE    `http://localhost:${PORT}/users/:cardId` - удалить пользователя по ID
+* GET       `http://localhost:${PORT}/users/:userId` - получить пользователя по ID
 
+* DELETE    `http://localhost:${PORT}/users/:userId` - удалить пользователя по ID
