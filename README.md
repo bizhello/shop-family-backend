@@ -11,7 +11,7 @@
 ###### Доступные не авторизованным пользователям.
 
 ###### Auth
-*POST     `http://localhost:${PORT}/signup` - регистрация
+* POST     `http://localhost:${PORT}/signup` - регистрация
 >JSON(email, password, firstName, lastName).
 
 * POST     `http://localhost:${PORT}/signin`- вход
