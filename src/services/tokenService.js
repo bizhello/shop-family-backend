@@ -1,13 +1,14 @@
 const jwt = require("jsonwebtoken");
 
 const { TokenModel } = require("../models/tokenModel");
+const { UnauthorizedError } = require("../../utils/errors/UnauthorizedError");
 
 const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = process.env;
 
 class TokenService {
   generateTokens(userId) {
     const accessToken = jwt.sign({ userId }, JWT_ACCESS_SECRET, {
-      expiresIn: "30m",
+      expiresIn: "20s",
     });
 
     const refreshToken = jwt.sign({ userId }, JWT_REFRESH_SECRET, {
@@ -36,19 +37,29 @@ class TokenService {
     return;
   }
 
-  async removeTokenByUserId(userId) {
-    await TokenModel.deleteOne({ user: userId });
-    return;
+  async findRefreshToken(refreshToken) {
+    const tokenData = await TokenModel.findOne({ refreshToken });
+
+    return tokenData;
+  }
+
+  validateAccessToken(accessToken) {
+    try {
+      const { userId } = jwt.verify(accessToken, JWT_ACCESS_SECRET);
+      return userId;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  validateRefreshToken(refreshToken) {
+    try {
+      const { userId } = jwt.verify(refreshToken, JWT_REFRESH_SECRET);
+      return userId;
+    } catch (error) {
+      return null;
+    }
   }
 }
-
-// const isAuthorized = async (token) => {
-//   try {
-//     const decoded = await jwt.verify(token, JWT_ACCESS_SECRET);
-//     return decoded.id;
-//   } catch (err) {
-//     return false;
-//   }
-// };
 
 module.exports = new TokenService();

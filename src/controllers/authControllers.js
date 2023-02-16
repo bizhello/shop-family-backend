@@ -1,4 +1,5 @@
 const authService = require("../services/authService");
+const tokenService = require("../services/tokenService");
 
 async function login(req, res, next) {
   try {
@@ -10,7 +11,7 @@ async function login(req, res, next) {
         maxAge: 30 * 24 * 60 * 1000,
         httpOnly: true,
       })
-      .send({ refreshToken: userData.refreshToken });
+      .send({ accessToken: userData.accessToken, userId: userData.userId });
   } catch (error) {
     next(error);
   }
@@ -30,7 +31,7 @@ async function createUser(req, res, next) {
         maxAge: 30 * 24 * 60 * 1000,
         httpOnly: true,
       })
-      .send({ accessToken: userData.accessToken });
+      .send({ accessToken: userData.accessToken, userId: userData.userId });
   } catch (error) {
     next(error);
   }
@@ -47,8 +48,24 @@ async function logout(req, res, next) {
   }
 }
 
+async function refreshToken(req, res, next) {
+  try {
+    const { refreshToken } = req.cookies;
+    const tokens = authService.refresh(refreshToken);
+    res
+      .cookie("refreshToken", tokens.refreshToken, {
+        maxAge: 30 * 24 * 60 * 1000,
+        httpOnly: true,
+      })
+      .send({ accessToken: tokens.accessToken, userId });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   login,
   createUser,
   logout,
+  refreshToken,
 };

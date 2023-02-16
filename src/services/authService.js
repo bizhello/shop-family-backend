@@ -27,7 +27,7 @@ class AuthService {
     await tokenService.saveToken(dataUser._id, tokens.refreshToken);
 
     return {
-      id: newUser._id,
+      userId: dataUser._id,
       email,
       firstName,
       lastName,
@@ -51,6 +51,7 @@ class AuthService {
 
     return {
       ...tokens,
+      userId: user._id,
     };
   }
 
@@ -58,6 +59,24 @@ class AuthService {
     await tokenService.removeToken(refreshToken);
 
     return;
+  }
+
+  async refresh(refreshToken) {
+    if (!refreshToken) {
+      throw new UnauthorizedError("Пользователь не авторизован!");
+    }
+    const userId = tokenService.validateRefreshToken(refreshToken);
+    const tokenFromDb = await tokenService.findRefreshToken(refreshToken);
+    if (!userId || !tokenFromDb) {
+      throw new UnauthorizedError("Пользователь не авторизован!");
+    }
+    const tokens = tokenService.generateTokens(userId);
+    await tokenService.saveToken(userId, tokens.refreshToken);
+
+    return {
+      ...tokens,
+      userId,
+    };
   }
 }
 
