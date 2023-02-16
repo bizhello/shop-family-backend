@@ -1,5 +1,5 @@
 const authService = require("../services/authService");
-const tokenService = require("../services/tokenService");
+const { UnauthorizedError } = require("../../utils/errors/UnauthorizedError");
 
 async function login(req, res, next) {
   try {
@@ -51,13 +51,14 @@ async function logout(req, res, next) {
 async function refreshToken(req, res, next) {
   try {
     const { refreshToken } = req.cookies;
-    const tokens = authService.refresh(refreshToken);
+    const tokens = await authService.refresh(refreshToken);
+
     res
       .cookie("refreshToken", tokens.refreshToken, {
         maxAge: 30 * 24 * 60 * 1000,
         httpOnly: true,
       })
-      .send({ accessToken: tokens.accessToken, userId });
+      .send({ accessToken: tokens.accessToken, userId: tokens.userId });
   } catch (error) {
     next(error);
   }

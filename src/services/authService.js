@@ -67,6 +67,7 @@ class AuthService {
     }
     const userId = tokenService.validateRefreshToken(refreshToken);
     const tokenFromDb = await tokenService.findRefreshToken(refreshToken);
+
     if (!userId || !tokenFromDb) {
       throw new UnauthorizedError("Пользователь не авторизован!");
     }

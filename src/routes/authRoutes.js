@@ -8,7 +8,7 @@ const authRoutes = express.Router();
 
 authRoutes.post('/signup', createUserValidation, createUser);
 authRoutes.post('/signin', loginValidation, login);
-authRoutes.post('/logout', logout);
+authRoutes.get('/logout', logout);
 authRoutes.get('/refresh', refreshToken);
 
 module.exports = {
