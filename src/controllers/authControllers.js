@@ -1,17 +1,31 @@
 const authService = require("../services/authService");
-const { UnauthorizedError } = require("../../utils/errors/UnauthorizedError");
 
 async function login(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const { email, password, remember } = req.body;
     const userData = await authService.login(email, password);
 
-    res
-      .cookie("refreshToken", userData.refreshToken, {
-        maxAge: 30 * 24 * 60 * 1000,
-        httpOnly: true,
-      })
-      .send({ accessToken: userData.accessToken, userId: userData.userId });
+    if (remember) {
+      res
+        .cookie("refreshToken", userData.refreshToken, {
+          maxAge: 30 * 24 * 60 * 1000,
+          httpOnly: true,
+        })
+        .send({
+          accessToken: userData.accessToken,
+          userId: userData.userId,
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+        });
+    }
+    res.send({
+      accessToken: userData.accessToken,
+      userId: userData.userId,
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+    });
   } catch (error) {
     next(error);
   }
@@ -31,7 +45,13 @@ async function createUser(req, res, next) {
         maxAge: 30 * 24 * 60 * 1000,
         httpOnly: true,
       })
-      .send({ accessToken: userData.accessToken, userId: userData.userId });
+      .send({
+        accessToken: userData.accessToken,
+        userId: userData.userId,
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+      });
   } catch (error) {
     next(error);
   }
@@ -58,7 +78,13 @@ async function refreshToken(req, res, next) {
         maxAge: 30 * 24 * 60 * 1000,
         httpOnly: true,
       })
-      .send({ accessToken: tokens.accessToken, userId: tokens.userId });
+      .send({
+        accessToken: tokens.accessToken,
+        userId: tokens.userId,
+        email: tokens.email,
+        firstName: tokens.firstName,
+        lastName: tokens.lastName,
+      });
   } catch (error) {
     next(error);
   }

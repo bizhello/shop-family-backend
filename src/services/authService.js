@@ -50,8 +50,11 @@ class AuthService {
     await tokenService.saveToken(user._id, tokens.refreshToken);
 
     return {
-      ...tokens,
       userId: user._id,
+      email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ...tokens,
     };
   }
 
@@ -73,10 +76,14 @@ class AuthService {
     }
     const tokens = tokenService.generateTokens(userId);
     await tokenService.saveToken(userId, tokens.refreshToken);
+    const userData = await UserModel.findById(userId);
 
     return {
-      ...tokens,
       userId,
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      ...tokens,
     };
   }
 }

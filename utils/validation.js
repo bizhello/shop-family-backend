@@ -51,6 +51,7 @@ const loginValidation = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
+    remember: Joi.boolean().required(),
   }),
 });
 
