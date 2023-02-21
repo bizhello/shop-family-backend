@@ -1,15 +1,20 @@
-// const express = require('express');
-// const { updateUserValidation } = require('../../utils/validation');
-// const {
-//   aboutMe, patchUser,
-// } = require('../controller/userControllers');
+const express = require("express");
+const {
+  updateUserValidation,
+  idUserValidation,
+} = require("../../utils/validation");
+const {
+  getUsersName,
+  getUserById,
+  deleteUserById,
+} = require("../controllers/userControllers");
 
-// const userRoutes = express.Router();
+const userRoutes = express.Router();
 
-// userRoutes.get('/me', aboutMe);
+userRoutes.get("/", getUsersName);
+userRoutes.get("/:userId", idUserValidation, getUserById);
+userRoutes.delete("/:userId", idUserValidation, deleteUserById);
 
-// userRoutes.patch('/me', updateUserValidation, patchUser);
-
-// module.exports = {
-//   userRoutes,
-// };
+module.exports = {
+  userRoutes,
+};
