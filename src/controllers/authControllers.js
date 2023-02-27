@@ -6,10 +6,14 @@ async function login(req, res, next) {
     const userData = await authService.login(email, password);
 
     if (remember) {
-      res
+      return res
         .cookie("refreshToken", userData.refreshToken, {
           maxAge: 30 * 24 * 60 * 1000,
           httpOnly: true,
+          secure: true,
+          sameSite: "None",
+          // path: "/shop-family",
+          // domain: 'https://bizhello.github.io/shop-family'
         })
         .send({
           accessToken: userData.accessToken,
@@ -19,6 +23,7 @@ async function login(req, res, next) {
           lastName: userData.lastName,
         });
     }
+
     res.send({
       accessToken: userData.accessToken,
       userId: userData.userId,
@@ -44,6 +49,10 @@ async function createUser(req, res, next) {
       .cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 1000,
         httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        // path: "/shop-family",
+        // domain: 'https://bizhello.github.io/shop-family'
       })
       .send({
         accessToken: userData.accessToken,
@@ -77,6 +86,10 @@ async function refreshToken(req, res, next) {
       .cookie("refreshToken", tokens.refreshToken, {
         maxAge: 30 * 24 * 60 * 1000,
         httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        // path: "/shop-family",
+        // domain: 'https://bizhello.github.io/shop-family'
       })
       .send({
         accessToken: tokens.accessToken,

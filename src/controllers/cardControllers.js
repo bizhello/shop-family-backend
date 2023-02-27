@@ -41,9 +41,59 @@ async function getCardById(req, res, next) {
   }
 }
 
+async function putCardById(req, res, next) {
+  try {
+    const card = await cardService.putCard(req.body);
+    res.send(card);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function incrementById(req, res, next) {
+  try {
+    const card = await cardService.increment(req.params.cardId);
+    res.send(card);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function decrementById(req, res, next) {
+  try {
+    const card = await cardService.decrement(req.params.cardId);
+    res.send(card);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// async function changeDateFrom(req, res, next) {
+//   try {
+//     const card = await cardService.changeDateFrom(req.params.cardId, req.body);
+//     res.send(card);
+//   } catch (error) {
+//     next(error);
+//   }
+// }
+
+// async function changeDateTo(req, res, next) {
+//   try {
+//     const card = await cardService.changeDateTo(req.params.cardId, req.body);
+//     res.send(card);
+//   } catch (error) {
+//     next(error);
+//   }
+// }
+
 module.exports = {
   getCards,
   postCard,
   deleteCard,
   getCardById,
+  putCardById,
+  incrementById,
+  decrementById,
+  // changeDateFrom,
+  // changeDateTo,
 };

@@ -8,7 +8,7 @@ const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = process.env;
 class TokenService {
   generateTokens(userId) {
     const accessToken = jwt.sign({ userId }, JWT_ACCESS_SECRET, {
-      expiresIn: "20s",
+      expiresIn: "15m",
     });
 
     const refreshToken = jwt.sign({ userId }, JWT_REFRESH_SECRET, {
