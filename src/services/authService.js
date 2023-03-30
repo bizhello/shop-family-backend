@@ -24,10 +24,10 @@ class AuthService {
     const dataUser = await newUser.save();
     const tokens = tokenService.generateTokens(dataUser._id);
 
-    await tokenService.saveToken(dataUser._id, tokens.jwtRefreshToken);
+    await tokenService.saveToken(dataUser._id, tokens.refreshToken);
 
     return {
-      id: newUser._id,
+      userId: dataUser._id,
       email,
       firstName,
       lastName,
@@ -47,9 +47,42 @@ class AuthService {
 
     const tokens = tokenService.generateTokens(user._id);
 
-    await tokenService.saveToken(user._id, tokens.jwtRefreshToken);
+    await tokenService.saveToken(user._id, tokens.refreshToken);
 
     return {
+      userId: user._id,
+      email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ...tokens,
+    };
+  }
+
+  async logout(refreshToken) {
+    await tokenService.removeToken(refreshToken);
+
+    return;
+  }
+
+  async refresh(refreshToken) {
+    if (!refreshToken) {
+      throw new UnauthorizedError("Пользователь не авторизован!");
+    }
+    const userId = tokenService.validateRefreshToken(refreshToken);
+    const tokenFromDb = await tokenService.findRefreshToken(refreshToken);
+
+    if (!userId || !tokenFromDb) {
+      throw new UnauthorizedError("Пользователь не авторизован!");
+    }
+    const tokens = tokenService.generateTokens(userId);
+    await tokenService.saveToken(userId, tokens.refreshToken);
+    const userData = await UserModel.findById(userId);
+
+    return {
+      userId,
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
       ...tokens,
     };
   }

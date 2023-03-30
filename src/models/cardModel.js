@@ -27,4 +27,4 @@ const cardSchema = new Schema({
   },
 });
 
-module.exports.Card = model("card", cardSchema);
+module.exports.CardModel = model("card", cardSchema);
